@@ -7,399 +7,226 @@
 <title>효찬에게</title>
 
 <style>
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+*{
+  box-sizing:border-box;
 }
 
-html, body {
-    width: 100%;
-    height: 100%;
+html,body{
+  width:100%;
+  height:100%;
+  margin:0;
 }
 
-body {
-    overflow: hidden;
-    font-family: "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
-    background:
-        radial-gradient(circle at 20% 20%, rgba(255,255,255,.9) 0 3px, transparent 4px),
-        radial-gradient(circle at 80% 30%, rgba(255,255,255,.8) 0 4px, transparent 5px),
-        radial-gradient(circle at 30% 80%, rgba(255,255,255,.8) 0 3px, transparent 4px),
-        linear-gradient(135deg, #ffdce9, #e9dcff, #d9efff);
-    background-size: 130px 130px, 170px 170px, 200px 200px, 100% 100%;
-    cursor: pointer;
+body{
+  overflow:hidden;
+  font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif;
+  background:#ffe6ef;
+  cursor:pointer;
 }
 
-/* 귀여운 배경 장식 */
-.background {
-    position: fixed;
-    inset: 0;
-    overflow: hidden;
-    pointer-events: none;
+/* 귀여운 배경 */
+body:before,
+body:after{
+  content:"";
+  position:fixed;
+  border-radius:50%;
+  pointer-events:none;
 }
 
-.circle {
-    position: absolute;
-    border-radius: 50%;
-    background: rgba(255,255,255,.35);
-    animation: float 5s ease-in-out infinite;
+body:before{
+  width:280px;
+  height:280px;
+  background:#ffd2e2;
+  left:-100px;
+  top:-100px;
 }
 
-.circle:nth-child(1) {
-    width: 130px;
-    height: 130px;
-    left: 5%;
-    top: 15%;
+body:after{
+  width:350px;
+  height:350px;
+  background:#e8dcff;
+  right:-140px;
+  bottom:-140px;
 }
 
-.circle:nth-child(2) {
-    width: 80px;
-    height: 80px;
-    right: 10%;
-    top: 20%;
-    animation-delay: 1s;
+/* 화면 */
+#screen{
+  width:100%;
+  height:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
 }
 
-.circle:nth-child(3) {
-    width: 170px;
-    height: 170px;
-    left: 15%;
-    bottom: -50px;
-    animation-delay: 2s;
+/* 처음 안내 */
+#guide{
+  position:absolute;
+  top:12%;
+  color:#b27b91;
+  font-size:14px;
+  font-weight:bold;
+  animation:fade .8s ease;
 }
 
-.circle:nth-child(4) {
-    width: 100px;
-    height: 100px;
-    right: 12%;
-    bottom: 10%;
-    animation-delay: 1.5s;
+/* 첫 하트 */
+#heart{
+  border:0;
+  background:none;
+  font-size:130px;
+  cursor:pointer;
+  animation:pop .9s ease;
+  filter:drop-shadow(0 10px 10px rgba(180,80,120,.18));
 }
 
-@keyframes float {
-    0%, 100% {
-        transform: translateY(0);
-    }
-    50% {
-        transform: translateY(-18px);
-    }
-}
-
-/* 전체 화면 */
-.screen {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    text-align: center;
-}
-
-/* 안내 문구 */
-.guide {
-    position: absolute;
-    top: 8%;
-    color: #8f7180;
-    font-size: 14px;
-    font-weight: bold;
-    letter-spacing: 1px;
-    animation: fadeIn 1.2s ease forwards;
-}
-
-/* 하트 버튼 */
-.heart-button {
-    border: none;
-    background: transparent;
-    font-size: 145px;
-    line-height: 1;
-    cursor: pointer;
-    filter: drop-shadow(0 12px 15px rgba(170, 90, 130, .25));
-    animation: heartAppear 1.3s cubic-bezier(.2,1.5,.5,1) forwards,
-               heartbeat 1.5s ease-in-out 1.3s infinite;
-    transition: transform .2s;
-}
-
-.heart-button:hover {
-    transform: scale(1.08);
-}
-
-.heart-button:active {
-    transform: scale(.92);
+#heart:hover{
+  transform:scale(1.08);
 }
 
 /* 효찬 */
-.name {
-    display: none;
-    position: absolute;
-    font-size: clamp(75px, 15vw, 170px);
-    font-weight: 900;
-    color: #ff6f9f;
-    text-shadow:
-        5px 5px 0 #fff,
-        9px 9px 0 rgba(255,111,159,.18);
-    letter-spacing: -8px;
-    user-select: none;
+#name{
+  display:none;
+  position:absolute;
+  font-size:clamp(80px,18vw,180px);
+  font-weight:900;
+  color:#ff6699;
+  text-shadow:
+    4px 4px 0 white,
+    7px 7px 0 rgba(255,100,150,.15);
+  letter-spacing:-8px;
 }
 
-.name.show {
-    display: block;
-    animation: popIn 1.2s cubic-bezier(.2,1.5,.5,1) forwards;
+/* 마지막 하트 */
+#bigHeart{
+  display:none;
+  position:absolute;
+  font-size:clamp(230px,50vw,520px);
+  line-height:1;
+  filter:drop-shadow(0 18px 18px rgba(180,70,120,.22));
 }
 
-/* 마지막 화면 */
-.final-heart {
-    display: none;
-    position: absolute;
-    font-size: clamp(230px, 45vw, 520px);
-    line-height: 1;
-    filter: drop-shadow(0 20px 25px rgba(170, 70, 120, .25));
+/* 바보 */
+#fool{
+  display:none;
+  position:absolute;
+  color:white;
+  font-size:clamp(50px,10vw,105px);
+  font-weight:900;
+  letter-spacing:-5px;
+  text-shadow:3px 4px 0 rgba(170,60,110,.3);
 }
 
-.final-heart.show {
-    display: block;
-    animation: popIn 1.3s cubic-bezier(.2,1.5,.5,1) forwards;
+/* 페이드 + 통통 */
+@keyframes pop{
+  0%{
+    opacity:0;
+    transform:scale(.2);
+  }
+  55%{
+    opacity:1;
+    transform:scale(1.2);
+  }
+  75%{
+    transform:scale(.9);
+  }
+  90%{
+    transform:scale(1.06);
+  }
+  100%{
+    opacity:1;
+    transform:scale(1);
+  }
 }
 
-/* 큰 하트 안의 바보 */
-.final-text {
-    display: none;
-    position: absolute;
-    z-index: 5;
-    font-size: clamp(45px, 9vw, 100px);
-    font-weight: 900;
-    color: white;
-    letter-spacing: -5px;
-    text-shadow: 4px 5px 0 rgba(190,70,120,.25);
-    user-select: none;
-}
-
-.final-text.show {
-    display: block;
-    animation: popIn 1.1s cubic-bezier(.2,1.5,.5,1) forwards;
-}
-
-/* 페이드 + 통통 튀기 */
-@keyframes popIn {
-    0% {
-        opacity: 0;
-        transform: scale(.2) translateY(30px);
-    }
-
-    45% {
-        opacity: 1;
-        transform: scale(1.2) translateY(-15px);
-    }
-
-    65% {
-        transform: scale(.9) translateY(5px);
-    }
-
-    82% {
-        transform: scale(1.06) translateY(-4px);
-    }
-
-    100% {
-        opacity: 1;
-        transform: scale(1) translateY(0);
-    }
-}
-
-@keyframes heartAppear {
-    0% {
-        opacity: 0;
-        transform: scale(.2);
-    }
-
-    45% {
-        opacity: 1;
-        transform: scale(1.25);
-    }
-
-    65% {
-        transform: scale(.9);
-    }
-
-    82% {
-        transform: scale(1.08);
-    }
-
-    100% {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
-@keyframes heartbeat {
-    0%, 100% {
-        transform: scale(1);
-    }
-
-    50% {
-        transform: scale(1.08);
-    }
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* 작은 하트 장식 */
-.mini-heart {
-    position: absolute;
-    color: rgba(255, 105, 155, .55);
-    font-size: 25px;
-    animation: miniFloat 3s ease-in-out infinite;
-}
-
-.mini-heart:nth-child(5) {
-    left: 20%;
-    top: 35%;
-}
-
-.mini-heart:nth-child(6) {
-    right: 22%;
-    top: 55%;
-    animation-delay: .8s;
-}
-
-.mini-heart:nth-child(7) {
-    left: 30%;
-    bottom: 18%;
-    animation-delay: 1.5s;
-}
-
-@keyframes miniFloat {
-    0%, 100% {
-        transform: translateY(0) rotate(-10deg);
-        opacity: .5;
-    }
-
-    50% {
-        transform: translateY(-15px) rotate(10deg);
-        opacity: 1;
-    }
+@keyframes fade{
+  from{
+    opacity:0;
+  }
+  to{
+    opacity:1;
+  }
 }
 
 /* 모바일 */
-@media (max-width: 600px) {
-    .heart-button {
-        font-size: 110px;
-    }
+@media(max-width:600px){
+  #heart{
+    font-size:100px;
+  }
 
-    .guide {
-        font-size: 12px;
-    }
+  #guide{
+    font-size:12px;
+  }
 }
 </style>
 </head>
 
 <body>
 
-<!-- 귀여운 배경 -->
-<div class="background">
-    <div class="circle"></div>
-    <div class="circle"></div>
-    <div class="circle"></div>
-    <div class="circle"></div>
+<div id="screen">
 
-    <div class="mini-heart">♥</div>
-    <div class="mini-heart">♥</div>
-    <div class="mini-heart">♥</div>
-</div>
+  <div id="guide">♡ 눌러보세요 ♡</div>
 
+  <button id="heart">❤️</button>
 
-<div class="screen" id="screen">
+  <div id="name">효찬</div>
 
-    <!-- 처음 안내 -->
-    <div class="guide" id="guide">
-        ♡ 눌러보세요 ♡
-    </div>
+  <div id="bigHeart">❤️</div>
 
-    <!-- 첫 번째 하트 -->
-    <button class="heart-button" id="heartButton">
-        ❤️
-    </button>
-
-    <!-- 효찬 -->
-    <div class="name" id="name">
-        효찬
-    </div>
-
-    <!-- 마지막 큰 하트 -->
-    <div class="final-heart" id="finalHeart">
-        ❤️
-    </div>
-
-    <!-- 마지막 글자 -->
-    <div class="final-text" id="finalText">
-        바보
-    </div>
+  <div id="fool">바보</div>
 
 </div>
 
 
 <script>
 
-const screen = document.getElementById("screen");
-const heartButton = document.getElementById("heartButton");
-const name = document.getElementById("name");
-const finalHeart = document.getElementById("finalHeart");
-const finalText = document.getElementById("finalText");
-const guide = document.getElementById("guide");
+let step=0;
 
-let step = 0;
-
-
-/*
-    1단계
-    하트를 클릭하면
-    효찬 등장
-*/
-heartButton.addEventListener("click", function(event) {
-
-    event.stopPropagation();
-
-    if (step !== 0) return;
-
-    step = 1;
-
-    heartButton.style.display = "none";
-    guide.style.display = "none";
-
-    name.classList.add("show");
-
-});
+const screen=document.getElementById("screen");
+const heart=document.getElementById("heart");
+const guide=document.getElementById("guide");
+const name=document.getElementById("name");
+const bigHeart=document.getElementById("bigHeart");
+const fool=document.getElementById("fool");
 
 
-/*
-    2단계
-    효찬이 등장한 후 화면을 클릭하면
-    큰 하트 + 바보 등장
-*/
-screen.addEventListener("click", function() {
+/* 하트 클릭 */
+heart.onclick=function(e){
 
-    if (step !== 1) return;
+  e.stopPropagation();
 
-    step = 2;
+  if(step!==0) return;
 
-    name.style.display = "none";
+  step=1;
 
-    finalHeart.classList.add("show");
+  heart.style.display="none";
+  guide.style.display="none";
 
-    setTimeout(() => {
-        finalText.classList.add("show");
-    }, 250);
+  name.style.display="block";
+  name.style.animation="pop .9s ease";
 
-});
+};
+
+
+/* 화면 클릭 */
+screen.onclick=function(){
+
+  if(step!==1) return;
+
+  step=2;
+
+  name.style.display="none";
+
+  bigHeart.style.display="block";
+  bigHeart.style.animation="pop .9s ease";
+
+  setTimeout(function(){
+
+    fool.style.display="block";
+    fool.style.animation="pop .8s ease";
+
+  },200);
+
+};
 
 </script>
 
